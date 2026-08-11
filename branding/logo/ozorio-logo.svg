@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Ozorio OS</title>
+  <desc id="desc">Símbolo O em gradiente Aurora</desc>
+  <defs>
+    <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5B2BE0"/>
+      <stop offset="0.52" stop-color="#1647A8"/>
+      <stop offset="1" stop-color="#12A57A"/>
+    </linearGradient>
+    <linearGradient id="inner" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8C5CFF"/>
+      <stop offset="1" stop-color="#2ED3A4"/>
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="210" fill="#081426"/>
+  <path fill="url(#aurora)" d="M256 72c-101.6 0-184 82.4-184 184s82.4 184 184 184 184-82.4 184-184S357.6 72 256 72Zm0 78c58.5 0 106 47.5 106 106s-47.5 106-106 106-106-47.5-106-106 47.5-106 106-106Z"/>
+  <path fill="url(#inner)" d="M256 170c47.5 0 86 38.5 86 86 0 42.3-30.5 77.5-70.7 84.7 23.4-16.7 38.7-44.1 38.7-75.1 0-50.9-41.3-92.2-92.2-92.2-7.1 0-14 .8-20.6 2.3A85.6 85.6 0 0 1 256 170Z" opacity=".95"/>
+</svg>
