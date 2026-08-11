@@ -1,0 +1,9 @@
+# Ferramentas opcionais para laboratório autorizado / CTF.
+# Não são instaladas por padrão para preservar leveza.
+nmap
+wireshark
+tcpdump
+netcat-openbsd
+whois
+dnsutils
+traceroute
