@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Ozorio
+Comment=Abrir menu principal do Ozorio OS
+Icon=/usr/share/icons/ozorio/ozorio-logo.svg
+Exec=lxpanelctl menu
+Terminal=false
+Categories=System;

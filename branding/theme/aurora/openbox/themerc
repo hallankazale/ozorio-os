@@ -1,0 +1,25 @@
+# Ozorio OS Aurora - lightweight Openbox theme
+# Avoid blur/transparency for old GPUs.
+window.active.title.bg: Solid
+window.active.title.bg.color: #3E2A6F
+window.active.label.text.color: #F4F7FB
+window.inactive.title.bg: Solid
+window.inactive.title.bg.color: #18213A
+window.inactive.label.text.color: #B9C1D0
+window.active.border.color: #6F4CC3
+window.inactive.border.color: #33405D
+window.handle.width: 3
+window.client.padding.width: 0
+menu.items.bg: Solid
+menu.items.bg.color: #18213A
+menu.items.text.color: #F4F7FB
+menu.items.active.bg: Solid
+menu.items.active.bg.color: #244A86
+menu.items.active.text.color: #FFFFFF
+menu.title.bg: Solid
+menu.title.bg.color: #111A3A
+menu.title.text.color: #F4F7FB
+menu.border.color: #33405D
+osd.bg: Solid
+osd.bg.color: #18213A
+osd.label.text.color: #F4F7FB

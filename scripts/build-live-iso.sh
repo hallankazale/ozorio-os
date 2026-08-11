@@ -47,6 +47,9 @@ chroot "$ROOTFS_DIR" /bin/bash -c "export DEBIAN_FRONTEND=noninteractive; apt-ge
 log "Configurando identidade do sistema..."
 ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/configure-system.sh"
 
+log "Aplicando branding Aurora..."
+ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/install-branding.sh"
+
 cleanup
 trap - EXIT
 
