@@ -3,14 +3,16 @@ set -Eeuo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BASE_MANIFEST="$ROOT_DIR/configs/system/packages-base.txt"
+LIVE_MANIFEST="$ROOT_DIR/configs/system/packages-live.txt"
 DEV_MANIFEST="$ROOT_DIR/configs/system/packages-development.txt"
 SEC_MANIFEST="$ROOT_DIR/configs/system/packages-security-optional.txt"
 
 usage() {
   cat <<'EOF'
-Uso: sudo ./scripts/install-packages.sh [--development] [--security]
+Uso: sudo ./scripts/install-packages.sh [--live] [--development] [--security]
 
 Sem opções, instala apenas os pacotes-base.
+--live         instala kernel, live-boot e desktop leve da ISO.
 --development  instala ferramentas de desenvolvimento.
 --security     instala ferramentas opcionais de segurança para laboratório autorizado/CTF.
 EOF
@@ -25,11 +27,13 @@ if [[ ${EUID:-$(id -u)} -ne 0 ]]; then
   exit 1
 fi
 
+install_live=false
 install_dev=false
 install_security=false
 
 for arg in "$@"; do
   case "$arg" in
+    --live) install_live=true ;;
     --development) install_dev=true ;;
     --security) install_security=true ;;
     -h|--help) usage; exit 0 ;;
@@ -38,6 +42,7 @@ for arg in "$@"; do
 done
 
 packages="$(read_manifest "$BASE_MANIFEST")"
+$install_live && packages+=" $(read_manifest "$LIVE_MANIFEST")"
 $install_dev && packages+=" $(read_manifest "$DEV_MANIFEST")"
 $install_security && packages+=" $(read_manifest "$SEC_MANIFEST")"
 
