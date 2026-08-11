@@ -50,6 +50,9 @@ ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/configure-system.sh"
 log "Aplicando branding Aurora..."
 ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/install-branding.sh"
 
+log "Instalando Central de Desenvolvimento..."
+ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/install-dev-center.sh"
+
 cleanup
 trap - EXIT
 
