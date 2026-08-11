@@ -1,0 +1,20 @@
+# Pacotes essenciais do Ozorio OS
+# Um pacote por linha. Comentários e linhas vazias são ignorados.
+
+sudo
+ca-certificates
+curl
+wget
+git
+nano
+htop
+network-manager
+network-manager-gnome
+openssh-client
+zip
+unzip
+p7zip-full
+file
+less
+rsync
+xdg-utils
