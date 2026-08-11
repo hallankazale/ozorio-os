@@ -1,0 +1,63 @@
+name: Build Ozorio OS Live ISO
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/**'
+      - 'configs/**'
+      - 'branding/**'
+      - 'apps/**'
+      - '.github/workflows/build-live-iso.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/**'
+      - 'configs/**'
+      - 'branding/**'
+      - 'apps/**'
+      - '.github/workflows/build-live-iso.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-live-iso:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install host build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            debootstrap rsync squashfs-tools xorriso isolinux syslinux-common
+
+      - name: Make scripts executable
+        run: chmod +x scripts/*.sh tests/*.sh || true
+
+      - name: Build Debian rootfs
+        run: sudo ./scripts/build-rootfs.sh
+
+      - name: Build Ozorio Live ISO
+        run: sudo ./scripts/build-live-iso.sh
+
+      - name: Verify generated files
+        run: |
+          test -s build/output/ozorio-os-0.1-amd64.iso
+          test -s build/output/ozorio-os-0.1-amd64.iso.sha256
+          sha256sum -c build/output/ozorio-os-0.1-amd64.iso.sha256
+          ls -lh build/output/
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ozorio-os-0.1-live-amd64
+          path: |
+            build/output/ozorio-os-0.1-amd64.iso
+            build/output/ozorio-os-0.1-amd64.iso.sha256
+          if-no-files-found: error
+          retention-days: 14
