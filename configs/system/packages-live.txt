@@ -1,0 +1,28 @@
+# Pacotes necessários para gerar e iniciar o Ozorio OS em modo Live
+# A v0.1 usa LXDE/Openbox por estarem nos repositórios Debian oficiais.
+# A camada visual Ozorio será aplicada por tema próprio; Trinity pode ser integrado depois.
+live-boot
+live-config
+linux-image-amd64
+systemd-sysv
+network-manager
+wpasupplicant
+sudo
+ca-certificates
+locales
+console-setup
+keyboard-configuration
+xserver-xorg
+xinit
+xterm
+lightdm
+lxde-core
+openbox
+pcmanfm
+lxpanel
+squashfs-tools
+grub-pc-bin
+grub-efi-amd64-bin
+isolinux
+syslinux-common
+xorriso

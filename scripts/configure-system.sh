@@ -19,7 +19,7 @@ mkdir -p "$ROOTFS_DIR/etc/ozorio" "$ROOTFS_DIR/usr/share/ozorio"
 cat > "$ROOTFS_DIR/etc/ozorio/release.conf" <<'EOF'
 OZORIO_VERSION=0.1
 OZORIO_CHANNEL=prototype
-OZORIO_DESKTOP=trinity-target
+OZORIO_DESKTOP=lxde
 OZORIO_THEME=aurora
 EOF
 
@@ -28,8 +28,8 @@ Ozorio OS 0.1
 Leve. Rápido. Completo.
 EOF
 
-# Defaults seguros e previsíveis. Configurações específicas de desktop
-# serão aplicadas em uma etapa separada para manter baixo acoplamento.
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo "$ROOTFS_DIR/etc/localtime" || true
 
+# O branding visual será aplicado em uma etapa separada para manter
+# a configuração do sistema independente do desktop.
 echo "Configuração base aplicada ao rootfs."
