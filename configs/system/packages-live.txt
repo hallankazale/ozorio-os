@@ -1,0 +1,23 @@
+# Pacotes necessários para gerar e iniciar o Ozorio OS em modo Live
+live-boot
+live-config
+linux-image-amd64
+systemd-sysv
+network-manager
+wpasupplicant
+sudo
+ca-certificates
+locales
+console-setup
+keyboard-configuration
+xserver-xorg
+xinit
+xterm
+lightdm
+trinity-desktop
+squashfs-tools
+grub-pc-bin
+grub-efi-amd64-bin
+isolinux
+syslinux-common
+xorriso
