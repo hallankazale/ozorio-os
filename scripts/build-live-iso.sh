@@ -45,10 +45,7 @@ packages="$(read_manifest "$BASE_MANIFEST") $(read_manifest "$LIVE_MANIFEST")"
 chroot "$ROOTFS_DIR" /bin/bash -c "export DEBIAN_FRONTEND=noninteractive; apt-get update; apt-get install -y --no-install-recommends $packages; apt-get clean; rm -rf /var/lib/apt/lists/*"
 
 log "Configurando identidade do sistema..."
-cp "$ROOT_DIR/scripts/configure-system.sh" "$ROOTFS_DIR/tmp/configure-system.sh"
-chmod +x "$ROOTFS_DIR/tmp/configure-system.sh"
-chroot "$ROOTFS_DIR" /bin/bash /tmp/configure-system.sh
-rm -f "$ROOTFS_DIR/tmp/configure-system.sh"
+ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/configure-system.sh"
 
 cleanup
 trap - EXIT
