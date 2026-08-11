@@ -1,0 +1,8 @@
+# label|command|icon
+Computador|pcmanfm computer:///|computer
+Arquivos|pcmanfm ~|system-file-manager
+Navegador|x-www-browser|web-browser
+Terminal|x-terminal-emulator|utilities-terminal
+Central de Desenvolvimento|ozorio-dev-center|applications-development
+Central Hacker|ozorio-hacker-center|security-high
+Configurações|lxde-control-center|preferences-system
