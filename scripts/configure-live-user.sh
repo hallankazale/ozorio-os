@@ -11,7 +11,6 @@ fatal() { printf 'Erro: %s\n' "$*" >&2; exit 1; }
 [[ ${EUID:-$(id -u)} -eq 0 ]] || fatal "execute com sudo/root"
 [[ -f "$ROOTFS_DIR/etc/debian_version" ]] || fatal "rootfs não encontrado em $ROOTFS_DIR"
 
-# Cria um usuário Live previsível para evitar bloqueio no LightDM.
 if ! chroot "$ROOTFS_DIR" id "$LIVE_USER" >/dev/null 2>&1; then
   chroot "$ROOTFS_DIR" useradd \
     --create-home \
@@ -21,7 +20,7 @@ if ! chroot "$ROOTFS_DIR" id "$LIVE_USER" >/dev/null 2>&1; then
     "$LIVE_USER"
 fi
 
-# Sem senha apenas na sessão Live. A criação de usuário persistente terá senha própria.
+# O usuário temporário Live não possui senha e entra automaticamente.
 chroot "$ROOTFS_DIR" passwd -d "$LIVE_USER" >/dev/null
 
 install -d "$ROOTFS_DIR/etc/lightdm/lightdm.conf.d"
@@ -34,7 +33,14 @@ allow-guest=false
 greeter-hide-users=false
 EOF
 
-# Garante permissões corretas para o diretório pessoal.
+# O assistente gráfico pode criar/remover usuários sem pedir a senha do usuário
+# temporário. A permissão é limitada aos três utilitários necessários.
+install -d -m 0750 "$ROOTFS_DIR/etc/sudoers.d"
+cat > "$ROOTFS_DIR/etc/sudoers.d/ozorio-first-run" <<EOF
+$LIVE_USER ALL=(root) NOPASSWD: /usr/sbin/useradd, /usr/sbin/chpasswd, /usr/sbin/userdel
+EOF
+chmod 0440 "$ROOTFS_DIR/etc/sudoers.d/ozorio-first-run"
+
 chroot "$ROOTFS_DIR" chown -R "$LIVE_USER:$LIVE_USER" "/home/$LIVE_USER"
 
-printf 'Usuário Live %s configurado com autologin.\n' "$LIVE_USER"
+printf 'Usuário Live %s configurado com autologin e assistente inicial.\n' "$LIVE_USER"
