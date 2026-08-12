@@ -11,13 +11,28 @@ fatal() { printf 'Erro: %s\n' "$*" >&2; exit 1; }
 [[ ${EUID:-$(id -u)} -eq 0 ]] || fatal "execute com sudo/root"
 [[ -f "$ROOTFS_DIR/etc/debian_version" ]] || fatal "rootfs não encontrado em $ROOTFS_DIR"
 
+existing_groups=()
+for group in sudo audio video plugdev netdev; do
+  if chroot "$ROOTFS_DIR" getent group "$group" >/dev/null 2>&1; then
+    existing_groups+=("$group")
+  fi
+done
+
+groups_csv=""
+if ((${#existing_groups[@]} > 0)); then
+  groups_csv="$(IFS=,; echo "${existing_groups[*]}")"
+fi
+
 if ! chroot "$ROOTFS_DIR" id "$LIVE_USER" >/dev/null 2>&1; then
-  chroot "$ROOTFS_DIR" useradd \
-    --create-home \
-    --shell /bin/bash \
-    --groups sudo,audio,video,plugdev,netdev \
-    --comment "$LIVE_NAME" \
-    "$LIVE_USER"
+  useradd_args=(
+    --create-home
+    --shell /bin/bash
+    --comment "$LIVE_NAME"
+  )
+  if [[ -n "$groups_csv" ]]; then
+    useradd_args+=(--groups "$groups_csv")
+  fi
+  chroot "$ROOTFS_DIR" useradd "${useradd_args[@]}" "$LIVE_USER"
 fi
 
 # O usuário temporário Live não possui senha e entra automaticamente.
@@ -43,4 +58,4 @@ chmod 0440 "$ROOTFS_DIR/etc/sudoers.d/ozorio-first-run"
 
 chroot "$ROOTFS_DIR" chown -R "$LIVE_USER:$LIVE_USER" "/home/$LIVE_USER"
 
-printf 'Usuário Live %s configurado com autologin e assistente inicial.\n' "$LIVE_USER"
+printf 'Usuário Live %s configurado com autologin e grupos disponíveis: %s\n' "$LIVE_USER" "${groups_csv:-nenhum adicional}"
