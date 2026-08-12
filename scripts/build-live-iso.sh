@@ -31,7 +31,8 @@ for cmd in chroot mount umount mksquashfs xorriso rsync; do require "$cmd"; done
 
 LIVE_MANIFEST="$ROOT_DIR/configs/system/packages-live.txt"
 BASE_MANIFEST="$ROOT_DIR/configs/system/packages-base.txt"
-[[ -f "$LIVE_MANIFEST" && -f "$BASE_MANIFEST" ]] || fatal "manifestos de pacotes ausentes"
+DEV_MANIFEST="$ROOT_DIR/configs/system/packages-development.txt"
+[[ -f "$LIVE_MANIFEST" && -f "$BASE_MANIFEST" && -f "$DEV_MANIFEST" ]] || fatal "manifestos de pacotes ausentes"
 
 log "Montando pseudo-filesystems do chroot..."
 mkdir -p "$ROOTFS_DIR"/{dev,proc,sys,run}
@@ -40,8 +41,8 @@ mount -t proc /proc "$ROOTFS_DIR/proc"
 mount -t sysfs /sys "$ROOTFS_DIR/sys"
 mount --bind /run "$ROOTFS_DIR/run"
 
-log "Instalando pacotes base + perfil Live..."
-packages="$(read_manifest "$BASE_MANIFEST") $(read_manifest "$LIVE_MANIFEST")"
+log "Instalando pacotes base + Live + ambiente de desenvolvimento..."
+packages="$(read_manifest "$BASE_MANIFEST") $(read_manifest "$LIVE_MANIFEST") $(read_manifest "$DEV_MANIFEST")"
 chroot "$ROOTFS_DIR" /bin/bash -c "export DEBIAN_FRONTEND=noninteractive; apt-get update; apt-get install -y --no-install-recommends $packages; apt-get clean; rm -rf /var/lib/apt/lists/*"
 
 log "Configurando identidade do sistema..."
