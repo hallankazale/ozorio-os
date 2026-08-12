@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import tkinter as tk
 from tkinter import messagebox
@@ -28,6 +29,17 @@ def confirm(title: str, message: str, command: list[str]) -> None:
         run_command(command)
 
 
+def logout() -> None:
+    if not messagebox.askyesno("Sair da sessão", "Deseja encerrar sua sessão?"):
+        return
+    if shutil.which("lxsession-logout"):
+        run_command(["lxsession-logout"])
+    elif shutil.which("lxde-logout"):
+        run_command(["lxde-logout"])
+    else:
+        messagebox.showerror("Ozorio OS", "Não foi encontrado um comando de logout do LXDE.")
+
+
 class PowerApp(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
@@ -49,9 +61,7 @@ class PowerApp(tk.Tk):
 
         grid = tk.Frame(body, bg=BG)
         grid.pack(fill="both", expand=True)
-        self._action(grid, 0, 0, "Sair da sessão", "Voltar para a tela de login", BLUE,
-                     lambda: confirm("Sair da sessão", "Deseja encerrar sua sessão?",
-                                     ["lxsession-logout"]))
+        self._action(grid, 0, 0, "Sair da sessão", "Voltar para a tela de login", BLUE, logout)
         self._action(grid, 0, 1, "Reiniciar", "Reiniciar o computador", PURPLE,
                      lambda: confirm("Reiniciar", "Deseja reiniciar o computador?",
                                      ["systemctl", "reboot"]))
