@@ -12,7 +12,8 @@ install -d \
   "$ROOTFS_DIR/usr/lib/ozorio" \
   "$ROOTFS_DIR/usr/local/bin" \
   "$ROOTFS_DIR/etc/xdg/autostart" \
-  "$ROOTFS_DIR/usr/share/applications"
+  "$ROOTFS_DIR/usr/share/applications" \
+  "$ROOTFS_DIR/etc/skel/Desktop"
 
 install -m 0755 "$ROOT_DIR/apps/first-run/ozorio-first-run.py" \
   "$ROOTFS_DIR/usr/lib/ozorio/ozorio-first-run.py"
@@ -58,5 +59,13 @@ Terminal=false
 Icon=/usr/share/icons/ozorio/ozorio-power.svg
 Categories=System;
 EOF
+
+cp "$ROOTFS_DIR/usr/share/applications/ozorio-first-run.desktop" \
+  "$ROOTFS_DIR/etc/skel/Desktop/Criar-usuario.desktop"
+cp "$ROOTFS_DIR/usr/share/applications/ozorio-power.desktop" \
+  "$ROOTFS_DIR/etc/skel/Desktop/Energia-Ozorio.desktop"
+chmod 0755 \
+  "$ROOTFS_DIR/etc/skel/Desktop/Criar-usuario.desktop" \
+  "$ROOTFS_DIR/etc/skel/Desktop/Energia-Ozorio.desktop"
 
 printf 'Assistente de primeiro uso e Central de Energia instalados.\n'
