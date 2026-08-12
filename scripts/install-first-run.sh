@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ROOTFS_DIR="${ROOTFS_DIR:-$ROOT_DIR/build/rootfs}"
+LIVE_USER="${LIVE_USER:-ozorio}"
 
 fatal() { printf 'Erro: %s\n' "$*" >&2; exit 1; }
 [[ ${EUID:-$(id -u)} -eq 0 ]] || fatal "execute com sudo/root"
@@ -60,12 +61,17 @@ Icon=/usr/share/icons/ozorio/ozorio-power.svg
 Categories=System;
 EOF
 
-cp "$ROOTFS_DIR/usr/share/applications/ozorio-first-run.desktop" \
-  "$ROOTFS_DIR/etc/skel/Desktop/Criar-usuario.desktop"
-cp "$ROOTFS_DIR/usr/share/applications/ozorio-power.desktop" \
-  "$ROOTFS_DIR/etc/skel/Desktop/Energia-Ozorio.desktop"
-chmod 0755 \
-  "$ROOTFS_DIR/etc/skel/Desktop/Criar-usuario.desktop" \
-  "$ROOTFS_DIR/etc/skel/Desktop/Energia-Ozorio.desktop"
+for desktop_file in ozorio-first-run.desktop ozorio-power.desktop; do
+  cp "$ROOTFS_DIR/usr/share/applications/$desktop_file" "$ROOTFS_DIR/etc/skel/Desktop/$desktop_file"
+done
+chmod 0755 "$ROOTFS_DIR/etc/skel/Desktop/ozorio-first-run.desktop" "$ROOTFS_DIR/etc/skel/Desktop/ozorio-power.desktop"
+
+if chroot "$ROOTFS_DIR" id "$LIVE_USER" >/dev/null 2>&1; then
+  install -d "$ROOTFS_DIR/home/$LIVE_USER/Desktop"
+  cp "$ROOTFS_DIR/etc/skel/Desktop/ozorio-first-run.desktop" "$ROOTFS_DIR/home/$LIVE_USER/Desktop/Criar-usuario.desktop"
+  cp "$ROOTFS_DIR/etc/skel/Desktop/ozorio-power.desktop" "$ROOTFS_DIR/home/$LIVE_USER/Desktop/Energia-Ozorio.desktop"
+  chmod 0755 "$ROOTFS_DIR/home/$LIVE_USER/Desktop/Criar-usuario.desktop" "$ROOTFS_DIR/home/$LIVE_USER/Desktop/Energia-Ozorio.desktop"
+  chroot "$ROOTFS_DIR" chown -R "$LIVE_USER:$LIVE_USER" "/home/$LIVE_USER/Desktop"
+fi
 
 printf 'Assistente de primeiro uso e Central de Energia instalados.\n'
