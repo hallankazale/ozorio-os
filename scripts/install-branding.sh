@@ -14,13 +14,17 @@ COLORS_SRC="$ROOT_DIR/branding/theme/aurora/colors.conf"
 PANEL_SRC="$ROOT_DIR/branding/desktop/panel.conf"
 SHORTCUTS_SRC="$ROOT_DIR/branding/desktop/shortcuts.list"
 LOGO_SRC="$ROOT_DIR/branding/logo/ozorio-logo.svg"
+DEV_ICON_SRC="$ROOT_DIR/branding/icons/ozorio-dev.svg"
+SECURITY_ICON_SRC="$ROOT_DIR/branding/icons/ozorio-security.svg"
+POWER_ICON_SRC="$ROOT_DIR/branding/icons/ozorio-power.svg"
 WALLPAPER_SRC="$ROOT_DIR/branding/wallpaper/ozorio-aurora.svg"
 LOGIN_SRC="$ROOT_DIR/configs/desktop/lightdm-gtk-greeter.conf"
 MENU_SRC="$ROOT_DIR/configs/desktop/ozorio-menu.desktop"
 
 for file in \
   "$THEME_SRC" "$COLORS_SRC" "$PANEL_SRC" "$SHORTCUTS_SRC" \
-  "$LOGO_SRC" "$WALLPAPER_SRC" "$LOGIN_SRC" "$MENU_SRC"; do
+  "$LOGO_SRC" "$DEV_ICON_SRC" "$SECURITY_ICON_SRC" "$POWER_ICON_SRC" \
+  "$WALLPAPER_SRC" "$LOGIN_SRC" "$MENU_SRC"; do
   [[ -f "$file" ]] || fatal "arquivo de branding ausente: $file"
 done
 
@@ -37,6 +41,9 @@ install -m 0644 "$COLORS_SRC" "$ROOTFS_DIR/usr/share/ozorio/branding/colors.conf
 install -m 0644 "$PANEL_SRC" "$ROOTFS_DIR/usr/share/ozorio/branding/panel.conf"
 install -m 0644 "$SHORTCUTS_SRC" "$ROOTFS_DIR/usr/share/ozorio/branding/shortcuts.list"
 install -m 0644 "$LOGO_SRC" "$ROOTFS_DIR/usr/share/icons/ozorio/ozorio-logo.svg"
+install -m 0644 "$DEV_ICON_SRC" "$ROOTFS_DIR/usr/share/icons/ozorio/ozorio-dev.svg"
+install -m 0644 "$SECURITY_ICON_SRC" "$ROOTFS_DIR/usr/share/icons/ozorio/ozorio-security.svg"
+install -m 0644 "$POWER_ICON_SRC" "$ROOTFS_DIR/usr/share/icons/ozorio/ozorio-power.svg"
 install -m 0644 "$WALLPAPER_SRC" "$ROOTFS_DIR/usr/share/backgrounds/ozorio/ozorio-aurora.svg"
 install -m 0644 "$LOGIN_SRC" "$ROOTFS_DIR/etc/lightdm/lightdm-gtk-greeter.conf"
 install -m 0644 "$MENU_SRC" "$ROOTFS_DIR/usr/share/applications/ozorio-menu.desktop"
