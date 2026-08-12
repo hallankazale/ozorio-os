@@ -27,6 +27,8 @@ grep -q 'Icon=/usr/share/icons/ozorio/ozorio-logo.svg' "$ROOT_DIR/scripts/instal
 grep -q 'ozorio-power.desktop' "$ROOT_DIR/scripts/install-first-run.sh"
 grep -q 'Energia-Ozorio.desktop' "$ROOT_DIR/scripts/install-first-run.sh"
 grep -q 'ozorio-power' "$ROOT_DIR/branding/desktop/shortcuts.list"
+grep -q 'systemctl.*reboot\|\["systemctl", "reboot"\]' "$ROOT_DIR/apps/system/ozorio-power.py"
+grep -q 'systemctl.*poweroff\|\["systemctl", "poweroff"\]' "$ROOT_DIR/apps/system/ozorio-power.py"
 
 if grep -R -nE 'shell=True|os\.system\(' \
   "$ROOT_DIR/apps/first-run" "$ROOT_DIR/apps/system"; then
