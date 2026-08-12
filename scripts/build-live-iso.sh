@@ -47,11 +47,17 @@ chroot "$ROOTFS_DIR" /bin/bash -c "export DEBIAN_FRONTEND=noninteractive; apt-ge
 log "Configurando identidade do sistema..."
 ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/configure-system.sh"
 
+log "Configurando usuário Live e autologin..."
+ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/configure-live-user.sh"
+
 log "Aplicando branding Aurora..."
 ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/install-branding.sh"
 
 log "Instalando Central de Desenvolvimento..."
 ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/install-dev-center.sh"
+
+log "Instalando assistente de primeiro uso..."
+ROOTFS_DIR="$ROOTFS_DIR" bash "$ROOT_DIR/scripts/install-first-run.sh"
 
 cleanup
 trap - EXIT
