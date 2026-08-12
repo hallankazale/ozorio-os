@@ -1,8 +1,10 @@
 # label|command|icon
+Ozorio|lxpanelctl menu|/usr/share/icons/ozorio/ozorio-logo.svg
 Computador|pcmanfm computer:///|computer
 Arquivos|pcmanfm ~|system-file-manager
 Navegador|x-www-browser|web-browser
 Terminal|x-terminal-emulator|utilities-terminal
-Central de Desenvolvimento|ozorio-dev-center|applications-development
-Central Hacker|ozorio-hacker-center|security-high
+Central de Desenvolvimento|ozorio-dev-center|/usr/share/icons/ozorio/ozorio-dev.svg
+Central Hacker|ozorio-hacker-center|/usr/share/icons/ozorio/ozorio-security.svg
 Configurações|lxde-control-center|preferences-system
+Sair / Reiniciar / Desligar|ozorio-power|/usr/share/icons/ozorio/ozorio-power.svg
