@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import grp
 import pwd
 import re
 import subprocess
@@ -12,6 +13,7 @@ from tkinter import messagebox
 
 USERNAME_RE = re.compile(r"^[a-z_][a-z0-9_-]{2,31}$")
 MARKER = Path.home() / ".config" / "ozorio" / "first-run-complete"
+PREFERRED_GROUPS = ("sudo", "audio", "video", "plugdev", "netdev")
 
 
 def run_privileged(args: list[str], input_text: str | None = None) -> subprocess.CompletedProcess[str]:
@@ -23,6 +25,18 @@ def run_privileged(args: list[str], input_text: str | None = None) -> subprocess
         capture_output=True,
         check=False,
     )
+
+
+def available_groups() -> list[str]:
+    """Retorna apenas grupos realmente existentes na distribuição atual."""
+    existing: list[str] = []
+    for group_name in PREFERRED_GROUPS:
+        try:
+            grp.getgrnam(group_name)
+            existing.append(group_name)
+        except KeyError:
+            continue
+    return existing
 
 
 def validate(username: str, password: str, confirmation: str) -> str | None:
@@ -43,14 +57,18 @@ def validate(username: str, password: str, confirmation: str) -> str | None:
 
 
 def create_user(username: str, full_name: str, password: str) -> tuple[bool, str]:
-    result = run_privileged([
+    useradd_args = [
         "/usr/sbin/useradd",
         "--create-home",
         "--shell", "/bin/bash",
-        "--groups", "sudo,audio,video,plugdev,netdev",
         "--comment", full_name or username,
-        username,
-    ])
+    ]
+    groups = available_groups()
+    if groups:
+        useradd_args.extend(["--groups", ",".join(groups)])
+    useradd_args.append(username)
+
+    result = run_privileged(useradd_args)
     if result.returncode != 0:
         return False, result.stderr.strip() or "Não foi possível criar o usuário."
 
