@@ -1,18 +1,10 @@
 #!/usr/bin/env python3
-"""Ozorio OS first-run wizard.
-
-The Live session starts with a temporary user. This wizard lets the user create
-an account with a password for installation/persistent use without embedding a
-fixed password in the image.
-"""
+"""Assistente de primeiro uso do Ozorio OS."""
 
 from __future__ import annotations
 
-import getpass
-import os
 import pwd
 import re
-import shutil
 import subprocess
 import tkinter as tk
 from pathlib import Path
@@ -23,9 +15,9 @@ MARKER = Path.home() / ".config" / "ozorio" / "first-run-complete"
 
 
 def run_privileged(args: list[str], input_text: str | None = None) -> subprocess.CompletedProcess[str]:
-    """Run a root-required command through pkexec, never through a shell."""
+    """Executa apenas utilitários autorizados no sudoers, sem shell intermediário."""
     return subprocess.run(
-        ["pkexec", *args],
+        ["sudo", "-n", *args],
         input=input_text,
         text=True,
         capture_output=True,
@@ -77,55 +69,32 @@ class FirstRunApp(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
         self.title("Bem-vindo ao Ozorio OS")
-        self.geometry("560x420")
+        self.geometry("560x430")
         self.resizable(False, False)
         self.configure(bg="#0F1426")
 
         container = tk.Frame(self, bg="#0F1426", padx=34, pady=28)
         container.pack(fill="both", expand=True)
 
-        tk.Label(
-            container,
-            text="Bem-vindo ao Ozorio OS",
-            font=("Sans", 20, "bold"),
-            fg="#F4F7FB",
-            bg="#0F1426",
-        ).pack(anchor="w")
-        tk.Label(
-            container,
-            text="Crie seu usuário. A sessão Live temporária continua disponível para testes.",
-            font=("Sans", 10),
-            fg="#B9C1D0",
-            bg="#0F1426",
-            wraplength=480,
-            justify="left",
-        ).pack(anchor="w", pady=(6, 20))
+        tk.Label(container, text="Bem-vindo ao Ozorio OS", font=("Sans", 20, "bold"),
+                 fg="#F4F7FB", bg="#0F1426").pack(anchor="w")
+        tk.Label(container,
+                 text="Você entrou automaticamente na sessão Live. Crie seu usuário agora ou continue testando o sistema.",
+                 font=("Sans", 10), fg="#B9C1D0", bg="#0F1426",
+                 wraplength=480, justify="left").pack(anchor="w", pady=(6, 20))
 
-        self.username = self._field(container, "Nome de usuário", show=None)
-        self.full_name = self._field(container, "Seu nome", show=None)
-        self.password = self._field(container, "Senha", show="•")
-        self.confirmation = self._field(container, "Confirmar senha", show="•")
+        self.username = self._field(container, "Nome de usuário", None)
+        self.full_name = self._field(container, "Seu nome", None)
+        self.password = self._field(container, "Senha", "•")
+        self.confirmation = self._field(container, "Confirmar senha", "•")
 
         buttons = tk.Frame(container, bg="#0F1426")
         buttons.pack(fill="x", pady=(24, 0))
-        tk.Button(
-            buttons,
-            text="Continuar usando Live",
-            command=self.skip,
-            padx=14,
-            pady=8,
-        ).pack(side="left")
-        tk.Button(
-            buttons,
-            text="Criar usuário",
-            command=self.submit,
-            padx=18,
-            pady=8,
-            bg="#6F4CC3",
-            fg="white",
-            activebackground="#244A86",
-            activeforeground="white",
-        ).pack(side="right")
+        tk.Button(buttons, text="Continuar usando Live", command=self.skip,
+                  padx=14, pady=8).pack(side="left")
+        tk.Button(buttons, text="Criar usuário", command=self.submit,
+                  padx=18, pady=8, bg="#6F4CC3", fg="white",
+                  activebackground="#244A86", activeforeground="white").pack(side="right")
 
     @staticmethod
     def _field(parent: tk.Widget, label: str, show: str | None) -> tk.Entry:
@@ -149,17 +118,14 @@ class FirstRunApp(tk.Tk):
         full_name = self.full_name.get().strip()
         password = self.password.get()
         confirmation = self.confirmation.get()
-
         error = validate(username, password, confirmation)
         if error:
             messagebox.showerror("Verifique os dados", error)
             return
-
         ok, message = create_user(username, full_name, password)
         if not ok:
             messagebox.showerror("Não foi possível criar o usuário", message)
             return
-
         self.mark_complete()
         messagebox.showinfo("Tudo certo", message)
         self.destroy()
