@@ -25,6 +25,7 @@ python3 -m py_compile "$ROOT_DIR/apps/system/ozorio-power.py"
 grep -q 'autologin-user=\$LIVE_USER' "$ROOT_DIR/scripts/configure-live-user.sh"
 grep -q 'Icon=/usr/share/icons/ozorio/ozorio-logo.svg' "$ROOT_DIR/scripts/install-first-run.sh"
 grep -q 'ozorio-power.desktop' "$ROOT_DIR/scripts/install-first-run.sh"
+grep -q 'Energia-Ozorio.desktop' "$ROOT_DIR/scripts/install-first-run.sh"
 grep -q 'ozorio-power' "$ROOT_DIR/branding/desktop/shortcuts.list"
 
 if grep -R -nE 'shell=True|os\.system\(' \
